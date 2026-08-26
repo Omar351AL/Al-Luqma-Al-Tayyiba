@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="سلة طلبات اللقمة الطيبة.">
+  <title>السلة | اللقمة الطيبة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Noto+Kufi+Arabic:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="scroll-progress" aria-hidden="true"><span id="scrollProgress"></span></div>
+
+  <nav class="navbar" aria-label="التنقل الرئيسي">
+    <div class="nav-inner">
+      <a class="brand" href="/#home" aria-label="اللقمة الطيبة">
+        <img src="/assets/brand-logo.png" alt="اللقمة الطيبة">
+      </a>
+      <ul class="nav-links">
+        <li><a href="/#home">الرئيسية</a></li>
+        <li><a href="/#features">المميزات</a></li>
+        <li><a href="/#menu">القائمة</a></li>
+        <li><a href="/#offer">العرض</a></li>
+        <li><a href="/#about">عن المطعم</a></li>
+        <li><a href="/#contact">التواصل</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a class="cart-link" href="/cart" aria-label="فتح السلة">
+          <span class="cart-icon" aria-hidden="true">🛒</span>
+          <span class="cart-count" data-cart-count>0</span>
+        </a>
+        <a class="cta" href="/#menu">اطلب الآن 🍔</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="site">
+    <section class="page-shell section">
+      <div class="container">
+        <div class="page-heading reveal">
+          <span class="eyebrow">سلة الطلب</span>
+          <h1>راجع طلبك قبل إرساله</h1>
+          <p>عدّل الكميات واحذف أي صنف، ثم أرسل تفاصيل الطلب مباشرة عبر واتساب.</p>
+        </div>
+
+        <div class="empty-state reveal" id="cartEmpty" hidden>
+          <h2>سلتك فارغة حاليًا</h2>
+          <p>استعرض القائمة وأضف وجبتك المفضلة.</p>
+          <a class="btn" href="/#menu">العودة إلى القائمة</a>
+        </div>
+
+        <div class="cart-layout reveal" id="cartContent">
+          <div class="cart-list" id="cartItems" aria-live="polite"></div>
+          <aside class="cart-summary" aria-label="ملخص السلة">
+            <h2>الإجمالي</h2>
+            <div class="summary-row">
+              <span>قيمة الطلب</span>
+              <strong id="cartTotal">0 ل.س</strong>
+            </div>
+            <div class="cart-summary-actions">
+              <a class="btn whatsapp" id="whatsappOrder" href="#" target="_blank" rel="noopener">إرسال الطلب عبر واتساب</a>
+              <button class="danger-btn" id="clearCart" type="button">إفراغ السلة</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <img src="/assets/brand-logo.png" alt="اللقمة الطيبة">
+      <div class="socials" aria-label="حسابات التواصل">
+        <a href="#" aria-label="فيسبوك">ف</a>
+        <a href="#" aria-label="إنستغرام">◎</a>
+        <a href="#" aria-label="تيك توك">♪</a>
+      </div>
+      <p class="copyright">© 2026 اللقمة الطيبة. جميع الحقوق محفوظة.</p>
+    </div>
+  </footer>
+
+  <script src="/js/cart-store.js" defer></script>
+  <script src="/js/site-ui.js" defer></script>
+  <script src="/js/cart-page.js" defer></script>
+</body>
+</html>

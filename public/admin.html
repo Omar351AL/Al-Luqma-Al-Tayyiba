@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="لوحة إدارة قائمة طعام اللقمة الطيبة.">
+  <title>لوحة الإدارة | اللقمة الطيبة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Noto+Kufi+Arabic:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="scroll-progress" aria-hidden="true"><span id="scrollProgress"></span></div>
+
+  <nav class="navbar" aria-label="التنقل الرئيسي">
+    <div class="nav-inner">
+      <a class="brand" href="/#home" aria-label="اللقمة الطيبة">
+        <img src="/assets/brand-logo.png" alt="اللقمة الطيبة">
+      </a>
+      <ul class="nav-links">
+        <li><a href="/#home">الرئيسية</a></li>
+        <li><a href="/#features">المميزات</a></li>
+        <li><a href="/#menu">القائمة</a></li>
+        <li><a href="/#contact">التواصل</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a class="cart-link" href="/cart" aria-label="فتح السلة">
+          <span class="cart-icon" aria-hidden="true">🛒</span>
+          <span class="cart-count" data-cart-count>0</span>
+        </a>
+        <a class="cta" href="/#menu">الموقع</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="site">
+    <section class="page-shell section" id="loginView">
+      <div class="container">
+        <div class="page-heading reveal">
+          <span class="eyebrow">دخول الإدارة</span>
+          <h1>إدارة قائمة الطعام</h1>
+          <p>تسجيل دخول محمي من السيرفر لتعديل الوجبات والأسعار والصور.</p>
+        </div>
+
+        <form class="login-card reveal" id="loginForm" autocomplete="off">
+          <div class="field">
+            <label for="adminUsername">اسم المستخدم</label>
+            <input id="adminUsername" name="username" type="text" autocomplete="username" required>
+          </div>
+          <div class="field">
+            <label for="adminPassword">كلمة المرور</label>
+            <input id="adminPassword" name="password" type="password" autocomplete="current-password" required>
+          </div>
+          <p class="admin-message" id="loginMessage"></p>
+          <button class="btn" type="submit">تسجيل الدخول</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="page-shell section" id="adminView" hidden>
+      <div class="container admin-shell">
+        <div class="page-heading reveal">
+          <span class="eyebrow">لوحة التحكم</span>
+          <h1>إدارة وجبات اللقمة الطيبة</h1>
+          <p>أي إضافة أو تعديل هنا يظهر في الصفحة الرئيسية بعد تحديثها.</p>
+        </div>
+
+        <div class="admin-toolbar reveal">
+          <strong id="adminGreeting">مرحبًا</strong>
+          <div class="admin-toolbar-actions">
+            <button class="btn" id="openFormButton" type="button">إضافة وجبة جديدة</button>
+            <button class="ghost-btn" id="logoutButton" type="button">تسجيل الخروج</button>
+          </div>
+        </div>
+
+        <p class="admin-message" id="adminMessage"></p>
+
+        <section class="admin-panel admin-form-card" id="formPanel" aria-label="نموذج الوجبة">
+          <div class="admin-panel-header">
+            <h2 id="formTitle">إضافة وجبة جديدة</h2>
+            <button class="ghost-btn" id="cancelFormButton" type="button">إلغاء</button>
+          </div>
+
+          <form class="form-grid" id="menuForm" enctype="multipart/form-data">
+            <input type="hidden" id="itemId" name="itemId">
+
+            <div class="field">
+              <label for="itemName">اسم الوجبة</label>
+              <input id="itemName" name="name" type="text" maxlength="90" required>
+            </div>
+
+            <div class="field">
+              <label for="itemDescription">الوصف</label>
+              <textarea id="itemDescription" name="description" maxlength="320" required></textarea>
+            </div>
+
+            <div class="field">
+              <label for="itemPrice">السعر بالليرة السورية</label>
+              <input id="itemPrice" name="price" type="number" min="1" step="1" required>
+            </div>
+
+            <fieldset class="field category-checks">
+              <legend>التصنيف</legend>
+              <label><input type="checkbox" name="category" value="burger"> برغر</label>
+              <label><input type="checkbox" name="category" value="chicken"> دجاج</label>
+              <label><input type="checkbox" name="category" value="meals"> وجبات</label>
+              <label><input type="checkbox" name="category" value="drinks"> مشروبات</label>
+            </fieldset>
+
+            <div class="field">
+              <label for="itemBadge">Badge اختياري</label>
+              <input id="itemBadge" name="badge" type="text" maxlength="36">
+            </div>
+
+            <div class="field">
+              <label for="itemImage">صورة الوجبة</label>
+              <input id="itemImage" name="image" type="file" accept="image/jpeg,image/png,image/webp">
+            </div>
+
+            <div class="preview-image" id="imagePreview">
+              <img src="" alt="معاينة الصورة">
+            </div>
+
+            <button class="btn" id="saveItemButton" type="submit">حفظ الوجبة</button>
+          </form>
+        </section>
+
+        <section class="admin-panel reveal" aria-label="الوجبات الحالية">
+          <div class="admin-panel-header">
+            <h2>الوجبات الحالية</h2>
+            <span class="admin-meta" id="itemsCount">0 وجبة</span>
+          </div>
+          <div class="admin-list" id="adminList" aria-live="polite"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <img src="/assets/brand-logo.png" alt="اللقمة الطيبة">
+      <div class="socials" aria-label="حسابات التواصل">
+        <a href="#" aria-label="فيسبوك">ف</a>
+        <a href="#" aria-label="إنستغرام">◎</a>
+        <a href="#" aria-label="تيك توك">♪</a>
+      </div>
+      <p class="copyright">© 2026 اللقمة الطيبة. جميع الحقوق محفوظة.</p>
+    </div>
+  </footer>
+
+  <script src="/js/cart-store.js" defer></script>
+  <script src="/js/site-ui.js" defer></script>
+  <script src="/js/admin.js" defer></script>
+</body>
+</html>

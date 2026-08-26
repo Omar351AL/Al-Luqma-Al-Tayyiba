@@ -1,0 +1,8 @@
+node_modules/
+.env
+data/*.sqlite
+data/*.sqlite-*
+public/uploads/menu/*
+!public/uploads/menu/.gitkeep
+npm-debug.log*
+*.log

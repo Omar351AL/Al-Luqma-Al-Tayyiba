@@ -1,0 +1,291 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="اللقمة الطيبة - مطعم وجبات سريعة بطابع فاخر وتجربة طعام لا تنسى.">
+  <title>اللقمة الطيبة | طعم لا يُنسى</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Noto+Kufi+Arabic:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="splash" id="splash" aria-hidden="true">
+    <canvas id="splashCanvas"></canvas>
+    <div class="splash-inner">
+      <img class="splash-logo" src="/assets/brand-logo.png" alt="">
+      <div class="splash-line"></div>
+      <p class="splash-tagline">طعم لا يُنسى</p>
+    </div>
+  </div>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="scroll-progress" aria-hidden="true"><span id="scrollProgress"></span></div>
+
+  <nav class="navbar" aria-label="التنقل الرئيسي">
+    <div class="nav-inner">
+      <a class="brand" href="#home" aria-label="اللقمة الطيبة">
+        <img src="/assets/brand-logo.png" alt="اللقمة الطيبة">
+      </a>
+      <ul class="nav-links">
+        <li><a href="#home">الرئيسية</a></li>
+        <li><a href="#features">المميزات</a></li>
+        <li><a href="#menu">القائمة</a></li>
+        <li><a href="#offer">العرض</a></li>
+        <li><a href="#about">عن المطعم</a></li>
+        <li><a href="#contact">التواصل</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a class="cart-link" href="/cart" aria-label="فتح السلة">
+          <span class="cart-icon" aria-hidden="true">🛒</span>
+          <span class="cart-count" data-cart-count>0</span>
+        </a>
+        <a class="cta" href="#menu">اطلب الآن 🍔</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="site">
+    <section class="hero section" id="home">
+      <canvas id="flameCanvas"></canvas>
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-content reveal">
+            <span class="eyebrow">🔥 مذاق سريع بروح فاخرة</span>
+            <h1>اللقمة الطيبة <span>تُشعل الشهية</span></h1>
+            <p class="hero-copy">
+              برغر مشوي، دجاج مقرمش، وجبات ساخنة، وخدمة سريعة مصممة لتجعل كل لقمة أكثر غنى ودفئاً.
+            </p>
+            <div class="hero-actions">
+              <a class="btn" href="#menu">استعرض القائمة</a>
+              <a class="btn secondary" href="#offer">عرض اليوم</a>
+            </div>
+          </div>
+          <div class="hero-visual reveal" data-delay="160">
+            <div class="hero-plate">
+              <img class="hero-food" src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&q=85&fit=crop&auto=format" alt="برغر فاخر من اللقمة الطيبة">
+            </div>
+            <div class="float-item first">وجبة اليوم 🔥</div>
+            <div class="float-item second">4.9 ⭐️</div>
+          </div>
+        </div>
+        <div class="stats reveal" data-delay="260">
+          <div class="stat">
+            <strong>+18K</strong>
+            <span>عميل سعيد</span>
+          </div>
+          <div class="stat">
+            <strong>35</strong>
+            <span>صنف طازج</span>
+          </div>
+          <div class="stat">
+            <strong>4.9</strong>
+            <span>متوسط التقييم</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features section" id="features">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="eyebrow">لماذا نحن؟</span>
+          <h2>تجربة سريعة، إحساس فاخر</h2>
+          <p>كل تفصيلة في الطلب مصممة لتصل ساخنة، مرتبة، ومشبعة بالنكهة من أول لقمة.</p>
+        </div>
+        <div class="features-grid">
+          <article class="feature-card reveal" data-delay="0">
+            <div class="feature-icon">🌿</div>
+            <h3>مكونات طازجة 100%</h3>
+            <p>اختيار يومي للخضار واللحوم والصلصات حتى تبقى النكهة صريحة وواضحة.</p>
+          </article>
+          <article class="feature-card reveal" data-delay="120">
+            <div class="feature-icon">⚡️</div>
+            <h3>توصيل خلال 30 دقيقة</h3>
+            <p>نظام تحضير سريع وتغليف يحافظ على الحرارة والقوام حتى بابك.</p>
+          </article>
+          <article class="feature-card reveal" data-delay="240">
+            <div class="feature-icon">👨‍🍳</div>
+            <h3>طهاة محترفون</h3>
+            <p>فريق يعرف كيف يوازن القرمشة، العصارة، والتوابل في كل طبق.</p>
+          </article>
+          <article class="feature-card reveal" data-delay="360">
+            <div class="feature-icon">💰</div>
+            <h3>أسعار تنافسية</h3>
+            <p>قيمة حقيقية في كل وجبة، بدون التنازل عن الجودة أو حجم الحصة.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="menu section" id="menu">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="eyebrow">قائمة النكهات</span>
+          <h2>اختر لقمتك المفضلة</h2>
+          <p>أصناف سريعة بطابع غني، من البرغر الكلاسيكي حتى الدجاج المقرمش والمشروبات الباردة.</p>
+        </div>
+
+        <div class="tabs reveal" role="tablist" aria-label="تصنيفات القائمة">
+          <button class="tab-btn is-active" type="button" data-filter="all">الكل</button>
+          <button class="tab-btn" type="button" data-filter="burger">برغر</button>
+          <button class="tab-btn" type="button" data-filter="chicken">دجاج</button>
+          <button class="tab-btn" type="button" data-filter="meals">وجبات</button>
+          <button class="tab-btn" type="button" data-filter="drinks">مشروبات</button>
+        </div>
+
+        <div class="menu-grid" id="menuGrid" aria-live="polite">
+          <div class="menu-loading">يتم تحميل القائمة...</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="offer section" id="offer">
+      <div class="container">
+        <div class="offer-layout">
+          <div class="offer-media reveal">
+            <img src="/assets/offer-family.jpg" alt="عرض خاص من اللقمة الطيبة">
+            <div class="discount-badge">30%<br>خصم</div>
+          </div>
+          <div class="offer-content reveal" data-delay="150">
+            <span class="eyebrow">عرض الليلة</span>
+            <h2>وجبة عائلية بنكهة لا تُقاوم</h2>
+            <p>
+              اطلب تشكيلة من البرغر والدجاج والبطاطا مع مشروبات باردة، واستمتع بخصم خاص قبل انتهاء الوقت.
+            </p>
+            <div class="countdown" aria-label="الوقت المتبقي للعرض">
+              <div class="time-box">
+                <strong id="hours">04</strong>
+                <span>ساعة</span>
+              </div>
+              <div class="time-box">
+                <strong id="minutes">00</strong>
+                <span>دقيقة</span>
+              </div>
+              <div class="time-box">
+                <strong id="seconds">00</strong>
+                <span>ثانية</span>
+              </div>
+            </div>
+            <a class="btn" href="#contact">احجز العرض الآن</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="reviews section" aria-label="تقييمات العملاء">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="eyebrow">آراء العملاء</span>
+          <h2>نقاط صغيرة تصنع فرقاً كبيراً</h2>
+        </div>
+        <div class="reviews-grid">
+          <article class="review-card reveal" data-delay="0">
+            <div class="stars">★★★★★</div>
+            <p>البرغر وصل ساخن والخبز طري جداً. أكثر شيء أعجبني توازن الصوص مع اللحم.</p>
+            <strong>رامي الحسن</strong>
+          </article>
+          <article class="review-card reveal" data-delay="120">
+            <div class="stars">★★★★★</div>
+            <p>الدجاج مقرمش من الخارج وطري من الداخل، والتغليف مرتب كأن الطلب للتصوير.</p>
+            <strong>سارة علي</strong>
+          </article>
+          <article class="review-card reveal" data-delay="240">
+            <div class="stars">★★★★★</div>
+            <p>توصيل سريع، أسعار مناسبة، وطعم ثابت في كل مرة. صار خياري الأول آخر الأسبوع.</p>
+            <strong>مجد النجار</strong>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="about section" id="about">
+      <div class="container">
+        <div class="about-layout">
+          <div class="about-content reveal">
+            <span class="eyebrow">عن المطعم</span>
+            <h2>بدأنا من فكرة بسيطة: لقمة ساخنة تُسعدك</h2>
+            <p>
+              في اللقمة الطيبة نمزج سرعة مطاعم الوجبات السريعة مع عناية المطابخ المتخصصة. نختار المكونات بعناية، نحضّر الصلصات يومياً، ونرسل الطلب كأنه خارج من المطبخ للتو.
+            </p>
+            <ul class="about-list">
+              <li>تحضير فوري عند الطلب</li>
+              <li>تغليف يحافظ على الحرارة والقوام</li>
+              <li>نكهات عربية محببة بلمسة عصرية</li>
+            </ul>
+          </div>
+          <div class="about-images reveal" data-delay="160">
+            <img src="/assets/about-1.jpg" alt="برغر اللقمة الطيبة">
+            <img src="/assets/about-2.jpg" alt="دجاج مقلي من اللقمة الطيبة">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact section" id="contact">
+      <div class="container">
+        <div class="contact-card reveal">
+          <span class="eyebrow">تواصل معنا</span>
+          <h2>طلبك القادم أقرب مما تتخيل</h2>
+          <div class="contact-info">
+            <div>
+              <strong>العنوان</strong>
+              <span>دمشق، شارع المطاعم</span>
+            </div>
+            <div>
+              <strong>الدوام</strong>
+              <span>يومياً 12 ظهراً - 2 ليلاً</span>
+            </div>
+            <div>
+              <strong>الهاتف</strong>
+              <span>+963 999 000 000</span>
+            </div>
+          </div>
+          <a class="btn whatsapp" href="https://wa.me/963999000000?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%B7%D9%84%D8%A8%D8%A7%D9%8B%20%D9%85%D9%86%20%D8%A7%D9%84%D9%84%D9%82%D9%85%D8%A9%20%D8%A7%D9%84%D8%B7%D9%8A%D8%A8%D8%A9" target="_blank" rel="noopener">اطلب عبر واتساب</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="item-modal" id="itemModal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="item-modal-backdrop" data-modal-close></div>
+    <article class="item-modal-panel" role="document">
+      <button class="modal-close" type="button" data-modal-close aria-label="إغلاق">×</button>
+      <img class="modal-image" id="modalImage" src="" alt="">
+      <div class="modal-body">
+        <span class="eyebrow modal-badge" id="modalBadge"></span>
+        <h3 id="modalTitle"></h3>
+        <p id="modalDescription"></p>
+        <strong class="modal-unit-price" id="modalUnitPrice"></strong>
+        <div class="quantity-control" aria-label="اختيار الكمية">
+          <button type="button" id="quantityMinus" aria-label="إنقاص الكمية">−</button>
+          <input id="quantityInput" type="number" min="1" value="1" inputmode="numeric" aria-label="الكمية">
+          <button type="button" id="quantityPlus" aria-label="زيادة الكمية">+</button>
+        </div>
+        <div class="modal-total">
+          <span>السعر الإجمالي</span>
+          <strong id="modalTotalPrice">0 ل.س</strong>
+        </div>
+        <button class="btn modal-add-btn" id="modalAddButton" type="button">إضافة إلى السلة</button>
+      </div>
+    </article>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <img src="/assets/brand-logo.png" alt="اللقمة الطيبة">
+      <div class="socials" aria-label="حسابات التواصل">
+        <a href="#" aria-label="فيسبوك">ف</a>
+        <a href="#" aria-label="إنستغرام">◎</a>
+        <a href="#" aria-label="تيك توك">♪</a>
+      </div>
+      <p class="copyright">© 2026 اللقمة الطيبة. جميع الحقوق محفوظة.</p>
+    </div>
+  </footer>
+  <script src="/js/cart-store.js" defer></script>
+  <script src="/js/site-ui.js" defer></script>
+  <script src="/js/app.js" defer></script>
+</body>
+</html>
