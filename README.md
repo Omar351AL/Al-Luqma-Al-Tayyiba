@@ -21,6 +21,7 @@ cp .env.example .env
 أهم المتغيرات:
 
 - `PORT`: منفذ السيرفر، الافتراضي `3000`.
+- `BASE_PATH`: مسار النشر العام، الافتراضي `/al-luqma-al-tayyiba`.
 - `SESSION_SECRET`: قيمة طويلة عشوائية لتوقيع session cookie.
 - `ADMIN_USERNAME`: اسم مستخدم الإدارة.
 - `ADMIN_PASSWORD_HASH`: hash كلمة مرور الإدارة.
@@ -44,9 +45,9 @@ npm start
 
 الروابط:
 
-- الصفحة الرئيسية: `http://localhost:3000`
-- السلة: `http://localhost:3000/cart`
-- لوحة الإدارة: `http://localhost:3000/admin`
+- الصفحة الرئيسية: `http://localhost:3000/al-luqma-al-tayyiba/`
+- السلة: `http://localhost:3000/al-luqma-al-tayyiba/cart`
+- لوحة الإدارة: `http://localhost:3000/al-luqma-al-tayyiba/admin`
 
 ## Storage
 

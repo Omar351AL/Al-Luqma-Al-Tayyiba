@@ -24,7 +24,7 @@
   let items = [];
 
   async function requestJson(url, options = {}) {
-    const response = await fetch(url, {
+    const response = await fetch(window.AppPaths.api(url), {
       credentials: "same-origin",
       headers: options.body instanceof FormData ? undefined : { "Content-Type": "application/json" },
       ...options
@@ -87,7 +87,7 @@
       itemPrice.value = item.price;
       itemBadge.value = item.badge || "";
       setSelectedCategories(item.category);
-      showPreview(item.image);
+      showPreview(window.AppPaths.asset(item.image));
     } else {
       setSelectedCategories("burger");
       hidePreview();
@@ -122,7 +122,7 @@
     const thumb = document.createElement("div");
     thumb.className = "admin-thumb";
     const image = document.createElement("img");
-    image.src = item.image;
+    image.src = window.AppPaths.asset(item.image);
     image.alt = item.name;
     thumb.appendChild(image);
 

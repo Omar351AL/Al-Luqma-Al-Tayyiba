@@ -142,7 +142,7 @@
     card.dataset.category = item.category;
 
     const image = document.createElement("img");
-    image.src = item.image;
+    image.src = window.AppPaths.asset(item.image);
     image.alt = item.name;
     card.appendChild(image);
 
@@ -198,7 +198,7 @@
     if (!menuGrid) return;
 
     try {
-      const response = await fetch("/api/menu");
+      const response = await fetch(window.AppPaths.api("/api/menu"));
       if (!response.ok) throw new Error("تعذر تحميل القائمة.");
       const data = await response.json();
       menuItems = data.items || [];
@@ -237,7 +237,7 @@
   function openItemModal(item) {
     activeItem = item;
     quantityInput.value = "1";
-    modalImage.src = item.image;
+    modalImage.src = window.AppPaths.asset(item.image);
     modalImage.alt = item.name;
     modalBadge.textContent = item.badge || "";
     modalTitle.textContent = item.name;

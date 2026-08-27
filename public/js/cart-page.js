@@ -52,7 +52,7 @@
     const thumb = document.createElement("div");
     thumb.className = "cart-thumb";
     const image = document.createElement("img");
-    image.src = item.image;
+    image.src = window.AppPaths.asset(item.image);
     image.alt = item.name;
     thumb.appendChild(image);
 

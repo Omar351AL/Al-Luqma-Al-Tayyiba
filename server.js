@@ -19,6 +19,7 @@ const { verifyPassword } = require("./server/auth");
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
+const BASE_PATH = normalizeBasePath(process.env.BASE_PATH || "/al-luqma-al-tayyiba");
 const publicDir = path.join(__dirname, "public");
 const uploadDir = path.join(publicDir, "uploads", "menu");
 const allowedCategories = new Set(["burger", "chicken", "meals", "drinks"]);
@@ -34,6 +35,24 @@ getDatabase();
 
 app.set("trust proxy", process.env.TRUST_PROXY === "1");
 app.use(helmet({ contentSecurityPolicy: false }));
+
+app.use((req, res, next) => {
+  if (BASE_PATH === "/") {
+    next();
+    return;
+  }
+
+  const [pathname, query = ""] = req.url.split("?");
+  if (pathname === BASE_PATH) {
+    res.redirect(308, `${BASE_PATH}/${query ? `?${query}` : ""}`);
+    return;
+  }
+  if (pathname.startsWith(`${BASE_PATH}/`)) {
+    req.url = `${pathname.slice(BASE_PATH.length)}${query ? `?${query}` : ""}`;
+  }
+  next();
+});
+
 app.use(express.json({ limit: "128kb" }));
 app.use(express.urlencoded({ extended: false, limit: "128kb" }));
 app.use(
@@ -46,6 +65,7 @@ app.use(
       httpOnly: true,
       sameSite: "lax",
       secure: process.env.COOKIE_SECURE === "true",
+      path: BASE_PATH,
       maxAge: 1000 * 60 * 60 * 8
     }
   })
@@ -75,6 +95,12 @@ const upload = multer({
     callback(null, true);
   }
 });
+
+function normalizeBasePath(value) {
+  const text = String(value || "").trim();
+  if (!text || text === "/") return "/";
+  return `/${text.replace(/^\/+|\/+$/g, "")}`;
+}
 
 function cleanText(value, maxLength) {
   const text = String(value || "").trim().replace(/\s+/g, " ");
@@ -229,7 +255,7 @@ app.post("/api/admin/login", (req, res) => {
 
 app.post("/api/admin/logout", requireAdmin, (req, res) => {
   req.session.destroy(() => {
-    res.clearCookie("al_luqma_admin");
+    res.clearCookie("al_luqma_admin", { path: BASE_PATH });
     res.json({ authenticated: false });
   });
 });
@@ -326,5 +352,5 @@ app.use((error, req, res, next) => {
 });
 
 app.listen(port, () => {
-  console.log(`Al-Luqma Al-Tayyiba is running on http://localhost:${port}`);
+  console.log(`Al-Luqma Al-Tayyiba is running on http://localhost:${port}${BASE_PATH === "/" ? "/" : `${BASE_PATH}/`}`);
 });
