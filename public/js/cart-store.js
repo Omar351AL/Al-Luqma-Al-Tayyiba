@@ -103,8 +103,17 @@
   function updateIndicators() {
     const count = countItems();
     document.querySelectorAll("[data-cart-count]").forEach((element) => {
-      element.textContent = String(count);
-      element.setAttribute("aria-label", `${count} عنصر في السلة`);
+      const cartLink = element.closest(".cart-link");
+      element.textContent = "";
+      element.setAttribute("aria-hidden", "true");
+
+      if (cartLink) {
+        cartLink.classList.toggle("has-items", count > 0);
+        cartLink.setAttribute(
+          "aria-label",
+          count > 0 ? `فتح السلة، تحتوي على ${count} عنصر` : "فتح السلة، السلة فارغة"
+        );
+      }
     });
   }
 

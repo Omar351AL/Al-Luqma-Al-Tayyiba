@@ -15,9 +15,26 @@
   const quantityMinus = document.getElementById("quantityMinus");
   const quantityPlus = document.getElementById("quantityPlus");
   const modalAddButton = document.getElementById("modalAddButton");
+  const SPLASH_SEEN_KEY = "alLuqmaSplashSeen";
   let menuItems = [];
   let activeFilter = "all";
   let activeItem = null;
+
+  function hasSeenSplash() {
+    try {
+      return sessionStorage.getItem(SPLASH_SEEN_KEY) === "1";
+    } catch {
+      return false;
+    }
+  }
+
+  function markSplashSeen() {
+    try {
+      sessionStorage.setItem(SPLASH_SEEN_KEY, "1");
+    } catch {
+      // Ignore storage failures and keep the page usable.
+    }
+  }
 
   function setupCanvas(canvas) {
     if (!canvas) return null;
@@ -38,6 +55,13 @@
 
   function startSplash() {
     if (!splash || !splashCanvas) return;
+
+    if (hasSeenSplash()) {
+      splash.classList.add("is-done");
+      splash.remove();
+      window.SiteUI.setReady();
+      return;
+    }
 
     const splashLayer = setupCanvas(splashCanvas);
     const sparks = Array.from({ length: 95 }, () => ({
@@ -83,6 +107,7 @@
     setTimeout(() => {
       splash.classList.add("is-exiting");
       setTimeout(() => {
+        markSplashSeen();
         splash.classList.add("is-done");
         splash.remove();
         window.SiteUI.setReady();

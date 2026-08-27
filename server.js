@@ -248,13 +248,23 @@ app.post("/api/admin/login", (req, res) => {
   }
 
   req.session.admin = { username };
-  req.session.save(() => {
+  req.session.save((error) => {
+    if (error) {
+      sendError(res, error);
+      return;
+    }
+
     res.json({ authenticated: true, username });
   });
 });
 
 app.post("/api/admin/logout", requireAdmin, (req, res) => {
-  req.session.destroy(() => {
+  req.session.destroy((error) => {
+    if (error) {
+      sendError(res, error);
+      return;
+    }
+
     res.clearCookie("al_luqma_admin", { path: BASE_PATH });
     res.json({ authenticated: false });
   });

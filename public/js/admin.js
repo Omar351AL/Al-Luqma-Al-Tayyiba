@@ -23,8 +23,17 @@
   const itemsCount = document.getElementById("itemsCount");
   let items = [];
 
+  function apiUrl(url) {
+    if (window.AppPaths && typeof window.AppPaths.api === "function") {
+      return window.AppPaths.api(url);
+    }
+
+    const path = String(url || "");
+    return `/al-luqma-al-tayyiba${path.startsWith("/") ? path : `/${path}`}`;
+  }
+
   async function requestJson(url, options = {}) {
-    const response = await fetch(window.AppPaths.api(url), {
+    const response = await fetch(apiUrl(url), {
       credentials: "same-origin",
       headers: options.body instanceof FormData ? undefined : { "Content-Type": "application/json" },
       ...options
