@@ -72,6 +72,17 @@ const seedItems = [
   }
 ];
 
+const defaultSettings = {
+  whatsappPhone: "963999000000",
+  displayPhone: "+963 999 000 000",
+  facebookUrl: "",
+  instagramUrl: "",
+  tiktokUrl: "",
+  telegramUrl: "",
+  address: "دمشق، شارع المطاعم",
+  hours: "يومياً 12 ظهراً - 2 ليلاً"
+};
+
 let database;
 
 function normalizeRow(row) {
@@ -107,9 +118,16 @@ function getDatabase() {
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       updated_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
+
+    CREATE TABLE IF NOT EXISTS settings (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL DEFAULT '',
+      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
   `);
 
   seedDatabase();
+  seedSettings();
   return database;
 }
 
@@ -126,6 +144,21 @@ function seedDatabase() {
   try {
     for (const item of seedItems) {
       insert.run(item.name, item.description, item.price, item.category, item.image, item.badge);
+    }
+    database.exec("COMMIT");
+  } catch (error) {
+    database.exec("ROLLBACK");
+    throw error;
+  }
+}
+
+function seedSettings() {
+  const insert = database.prepare("INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)");
+
+  database.exec("BEGIN");
+  try {
+    for (const [key, value] of Object.entries(defaultSettings)) {
+      insert.run(key, value);
     }
     database.exec("COMMIT");
   } catch (error) {
@@ -177,12 +210,49 @@ function deleteMenuItem(id) {
   return item;
 }
 
+function getSettings() {
+  const rows = getDatabase().prepare("SELECT key, value FROM settings").all();
+  const settings = { ...defaultSettings };
+  for (const row of rows) {
+    if (Object.hasOwn(defaultSettings, row.key)) {
+      settings[row.key] = row.value;
+    }
+  }
+  return settings;
+}
+
+function updateSettings(nextSettings) {
+  const current = getSettings();
+  const upsert = getDatabase().prepare(`
+    INSERT INTO settings (key, value, updated_at)
+    VALUES (?, ?, datetime('now'))
+    ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = datetime('now')
+  `);
+
+  getDatabase().exec("BEGIN");
+  try {
+    for (const key of Object.keys(defaultSettings)) {
+      const value = Object.hasOwn(nextSettings, key) ? nextSettings[key] : current[key];
+      upsert.run(key, String(value || ""));
+    }
+    getDatabase().exec("COMMIT");
+  } catch (error) {
+    getDatabase().exec("ROLLBACK");
+    throw error;
+  }
+
+  return getSettings();
+}
+
 module.exports = {
   databasePath,
+  defaultSettings,
   getDatabase,
   listMenuItems,
   getMenuItem,
   createMenuItem,
   updateMenuItem,
-  deleteMenuItem
+  deleteMenuItem,
+  getSettings,
+  updateSettings
 };

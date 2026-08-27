@@ -16,12 +16,21 @@
   const itemDescription = document.getElementById("itemDescription");
   const itemPrice = document.getElementById("itemPrice");
   const itemBadge = document.getElementById("itemBadge");
+  const itemRemoveImage = document.getElementById("itemRemoveImage");
   const itemImage = document.getElementById("itemImage");
   const imagePreview = document.getElementById("imagePreview");
-  const imagePreviewImg = imagePreview.querySelector("img");
+  const imagePreviewImg = document.getElementById("imagePreviewImg");
+  const imagePreviewEmpty = document.getElementById("imagePreviewEmpty");
+  const imageUploadTitle = document.getElementById("imageUploadTitle");
+  const imageFileName = document.getElementById("imageFileName");
+  const removeImageButton = document.getElementById("removeImageButton");
+  const settingsForm = document.getElementById("settingsForm");
+  const settingsMessage = document.getElementById("settingsMessage");
   const adminList = document.getElementById("adminList");
   const itemsCount = document.getElementById("itemsCount");
   let items = [];
+  let activeEditItem = null;
+  let selectedPreviewUrl = "";
 
   function apiUrl(url) {
     if (window.AppPaths && typeof window.AppPaths.api === "function") {
@@ -30,6 +39,15 @@
 
     const path = String(url || "");
     return `/al-luqma-al-tayyiba${path.startsWith("/") ? path : `/${path}`}`;
+  }
+
+  function assetUrl(path) {
+    const value = String(path || "");
+    if (!value) return "";
+    if (window.AppPaths && typeof window.AppPaths.asset === "function") {
+      return window.AppPaths.asset(value);
+    }
+    return value;
   }
 
   async function requestJson(url, options = {}) {
@@ -72,6 +90,21 @@
     window.SiteUI.setupReveals(adminView);
   }
 
+  function clearSelectedPreviewUrl() {
+    if (!selectedPreviewUrl) return;
+    URL.revokeObjectURL(selectedPreviewUrl);
+    selectedPreviewUrl = "";
+  }
+
+  function setUploadState(file = null, message = "JPG أو PNG أو WebP - ملف واحد فقط") {
+    imageUploadTitle.textContent = file ? "تم اختيار الصورة" : "اختر صورة";
+    imageFileName.textContent = file ? file.name : message;
+  }
+
+  function hasImage(item) {
+    return Boolean(String(item && item.image ? item.image : "").trim());
+  }
+
   function selectedCategories() {
     return [...menuForm.querySelectorAll('input[name="category"]:checked')].map((input) => input.value);
   }
@@ -85,8 +118,13 @@
 
   function openForm(item = null) {
     clearMessage(adminMessage);
+    activeEditItem = item;
+    clearSelectedPreviewUrl();
     menuForm.reset();
+    itemRemoveImage.value = "0";
+    itemImage.value = "";
     itemImage.required = !item;
+    setUploadState();
     itemId.value = item ? item.id : "";
     formTitle.textContent = item ? "تعديل الوجبة" : "إضافة وجبة جديدة";
 
@@ -96,7 +134,11 @@
       itemPrice.value = item.price;
       itemBadge.value = item.badge || "";
       setSelectedCategories(item.category);
-      showPreview(window.AppPaths.asset(item.image));
+      if (hasImage(item)) {
+        showPreview(assetUrl(item.image), true);
+      } else {
+        showEmptyPreview("لا توجد صورة حالية");
+      }
     } else {
       setSelectedCategories("burger");
       hidePreview();
@@ -108,19 +150,39 @@
   }
 
   function closeForm() {
+    activeEditItem = null;
+    clearSelectedPreviewUrl();
     formPanel.classList.remove("is-open");
     formPanel.hidden = true;
     menuForm.reset();
+    itemRemoveImage.value = "0";
+    itemImage.value = "";
+    setUploadState();
     hidePreview();
   }
 
-  function showPreview(src) {
+  function showPreview(src, canRemoveCurrent = false) {
     imagePreviewImg.src = src;
+    imagePreviewImg.hidden = false;
+    imagePreviewEmpty.hidden = true;
+    removeImageButton.hidden = !canRemoveCurrent;
+    imagePreview.classList.add("is-visible");
+  }
+
+  function showEmptyPreview(message) {
+    imagePreviewImg.src = "";
+    imagePreviewImg.hidden = true;
+    imagePreviewEmpty.textContent = message;
+    imagePreviewEmpty.hidden = false;
+    removeImageButton.hidden = true;
     imagePreview.classList.add("is-visible");
   }
 
   function hidePreview() {
     imagePreviewImg.src = "";
+    imagePreviewImg.hidden = true;
+    imagePreviewEmpty.hidden = true;
+    removeImageButton.hidden = true;
     imagePreview.classList.remove("is-visible");
   }
 
@@ -130,10 +192,17 @@
 
     const thumb = document.createElement("div");
     thumb.className = "admin-thumb";
-    const image = document.createElement("img");
-    image.src = window.AppPaths.asset(item.image);
-    image.alt = item.name;
-    thumb.appendChild(image);
+    if (hasImage(item)) {
+      const image = document.createElement("img");
+      image.src = assetUrl(item.image);
+      image.alt = item.name;
+      thumb.appendChild(image);
+    } else {
+      const placeholder = document.createElement("div");
+      placeholder.className = "admin-image-placeholder";
+      placeholder.textContent = "بدون صورة";
+      thumb.appendChild(placeholder);
+    }
 
     const main = document.createElement("div");
     main.className = "admin-product-main";
@@ -203,6 +272,19 @@
     }
   }
 
+  function fillSettingsForm(settings) {
+    const values = settings || {};
+    [...settingsForm.elements].forEach((element) => {
+      if (!element.name) return;
+      element.value = values[element.name] || "";
+    });
+  }
+
+  async function loadSettings() {
+    const data = await requestJson("/api/admin/settings");
+    fillSettingsForm(data.settings);
+  }
+
   loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     clearMessage(loginMessage);
@@ -218,6 +300,7 @@
       });
       showAdmin(data.username);
       await loadItems();
+      await loadSettings();
     } catch (error) {
       showMessage(loginMessage, error.message, true);
     }
@@ -234,10 +317,36 @@
   openFormButton.addEventListener("click", () => openForm());
   cancelFormButton.addEventListener("click", closeForm);
 
+  removeImageButton.addEventListener("click", () => {
+    if (!activeEditItem) return;
+    clearSelectedPreviewUrl();
+    itemImage.value = "";
+    itemImage.required = false;
+    itemRemoveImage.value = "1";
+    setUploadState(null, "سيتم حذف الصورة الحالية عند حفظ الوجبة");
+    showEmptyPreview("سيتم حذف الصورة عند الحفظ");
+  });
+
   itemImage.addEventListener("change", () => {
     const file = itemImage.files[0];
-    if (!file) return;
-    showPreview(URL.createObjectURL(file));
+    clearSelectedPreviewUrl();
+    itemRemoveImage.value = "0";
+
+    if (!file) {
+      setUploadState();
+      if (activeEditItem && hasImage(activeEditItem)) {
+        showPreview(assetUrl(activeEditItem.image), true);
+      } else if (activeEditItem) {
+        showEmptyPreview("لا توجد صورة حالية");
+      } else {
+        hidePreview();
+      }
+      return;
+    }
+
+    selectedPreviewUrl = URL.createObjectURL(file);
+    setUploadState(file);
+    showPreview(selectedPreviewUrl, false);
   });
 
   menuForm.addEventListener("submit", async (event) => {
@@ -265,17 +374,49 @@
     }
   });
 
-  async function init() {
+  settingsForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearMessage(settingsMessage);
+
+    const payload = Object.fromEntries(new FormData(settingsForm).entries());
+
     try {
-      const session = await requestJson("/api/admin/session");
-      if (!session.authenticated) {
-        showLogin();
-        return;
+      const data = await requestJson("/api/admin/settings", {
+        method: "PUT",
+        body: JSON.stringify(payload)
+      });
+      fillSettingsForm(data.settings);
+      if (window.AppSettings && typeof window.AppSettings.load === "function") {
+        await window.AppSettings.load();
       }
-      showAdmin(session.username);
-      await loadItems();
+      showMessage(settingsMessage, "تم حفظ إعدادات التواصل.");
+    } catch (error) {
+      showMessage(settingsMessage, error.message, true);
+    }
+  });
+
+  async function init() {
+    let session;
+
+    try {
+      session = await requestJson("/api/admin/session");
     } catch {
       showLogin();
+      return;
+    }
+
+    if (!session.authenticated) {
+      showLogin();
+      return;
+    }
+
+    showAdmin(session.username);
+
+    try {
+      await loadItems();
+      await loadSettings();
+    } catch (error) {
+      showMessage(adminMessage, error.message, true);
     }
   }
 

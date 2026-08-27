@@ -797,8 +797,28 @@
       transition: transform 0.45s ease, filter 0.45s ease;
     }
 
+    .menu-image-placeholder {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      min-height: 430px;
+      padding: 1rem;
+      color: rgba(255, 208, 134, 0.72);
+      background:
+        radial-gradient(circle at 50% 36%, rgba(247, 148, 29, 0.16), transparent 15rem),
+        linear-gradient(145deg, rgba(42, 18, 6, 0.9), rgba(8, 5, 10, 0.9));
+      font-family: "Noto Kufi Arabic", "Cairo";
+      font-weight: 900;
+      transition: transform 0.45s ease, filter 0.45s ease;
+    }
+
     .menu-card:hover img {
       transform: scale(1.1);
+      filter: saturate(1.12) contrast(1.06);
+    }
+
+    .menu-card:hover .menu-image-placeholder {
+      transform: scale(1.04);
       filter: saturate(1.12) contrast(1.06);
     }
 
@@ -940,6 +960,11 @@
       height: 100%;
       min-height: 420px;
       object-fit: cover;
+    }
+
+    .item-modal-panel.has-no-image {
+      grid-template-columns: minmax(0, 1fr);
+      width: min(100%, 560px);
     }
 
     .modal-body {
@@ -1421,10 +1446,26 @@
     }
 
     .cart-thumb img,
-    .admin-thumb img {
+    .admin-thumb img,
+    .cart-image-placeholder,
+    .admin-image-placeholder {
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+
+    .cart-image-placeholder,
+    .admin-image-placeholder {
+      display: grid;
+      place-items: center;
+      padding: 0.7rem;
+      color: rgba(255, 208, 134, 0.72);
+      background:
+        radial-gradient(circle at 50% 35%, rgba(247, 148, 29, 0.14), transparent 5rem),
+        rgba(8, 5, 10, 0.62);
+      font-size: 0.82rem;
+      font-weight: 900;
+      text-align: center;
     }
 
     .cart-item-main {
@@ -1558,7 +1599,8 @@
     }
 
     .field label,
-    .field legend {
+    .field legend,
+    .field-label {
       color: #FFD086;
       font-weight: 900;
     }
@@ -1587,6 +1629,73 @@
     .field select:focus {
       border-color: rgba(247, 148, 29, 0.82);
       box-shadow: 0 0 0 3px rgba(247, 148, 29, 0.14);
+    }
+
+    .file-upload-field {
+      position: relative;
+    }
+
+    .file-input {
+      position: absolute;
+      width: 1px !important;
+      height: 1px !important;
+      min-height: 1px !important;
+      padding: 0 !important;
+      overflow: hidden;
+      border: 0 !important;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .file-upload-control {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      min-height: 64px;
+      padding: 0.85rem;
+      border: 1px dashed rgba(247, 148, 29, 0.48);
+      border-radius: var(--radius);
+      color: var(--cream);
+      background:
+        linear-gradient(145deg, rgba(247, 148, 29, 0.08), rgba(255, 242, 220, 0.03)),
+        rgba(8, 5, 10, 0.48);
+      cursor: pointer;
+      transition: border-color 0.22s ease, background 0.22s ease, transform 0.22s ease;
+    }
+
+    .file-upload-control:hover,
+    .file-upload-control:focus-within {
+      transform: translateY(-1px);
+      border-color: rgba(247, 148, 29, 0.86);
+      background:
+        linear-gradient(145deg, rgba(247, 148, 29, 0.14), rgba(255, 242, 220, 0.04)),
+        rgba(8, 5, 10, 0.58);
+    }
+
+    .file-upload-icon {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      flex: 0 0 42px;
+      border: 1px solid rgba(247, 148, 29, 0.36);
+      border-radius: var(--radius);
+      color: #160A04;
+      background: linear-gradient(135deg, #FFD086, var(--orange));
+      font-size: 1.25rem;
+      font-weight: 900;
+    }
+
+    .file-upload-control strong,
+    .file-upload-control small {
+      display: block;
+    }
+
+    .file-upload-control small {
+      margin-top: 0.15rem;
+      color: var(--muted);
+      font-weight: 800;
+      overflow-wrap: anywhere;
     }
 
     .category-checks {
@@ -1646,6 +1755,14 @@
       display: grid;
       gap: 1rem;
       padding: 1rem;
+    }
+
+    .settings-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .field-wide {
+      grid-column: 1 / -1;
     }
 
     .admin-panel-header {
@@ -1733,21 +1850,43 @@
 
     .preview-image {
       display: none;
-      width: 120px;
-      aspect-ratio: 1;
-      overflow: hidden;
-      border: 1px solid rgba(247, 148, 29, 0.22);
-      border-radius: var(--radius);
+      gap: 0.65rem;
+      width: min(100%, 280px);
     }
 
     .preview-image.is-visible {
-      display: block;
+      display: grid;
+    }
+
+    .preview-image-frame {
+      position: relative;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      border: 1px solid rgba(247, 148, 29, 0.22);
+      border-radius: var(--radius);
+      background: rgba(8, 5, 10, 0.58);
+    }
+
+    .preview-image img,
+    .preview-placeholder {
+      width: 100%;
+      height: 100%;
     }
 
     .preview-image img {
-      width: 100%;
-      height: 100%;
       object-fit: cover;
+    }
+
+    .preview-placeholder {
+      display: grid;
+      place-items: center;
+      padding: 1rem;
+      color: rgba(255, 208, 134, 0.74);
+      background:
+        radial-gradient(circle at 50% 40%, rgba(247, 148, 29, 0.16), transparent 8rem),
+        rgba(8, 5, 10, 0.62);
+      font-weight: 900;
+      text-align: center;
     }
 
     .reveal {
@@ -1914,7 +2053,8 @@
       }
 
       .menu-card,
-      .menu-card img {
+      .menu-card img,
+      .menu-image-placeholder {
         min-height: 390px;
       }
 
@@ -1977,6 +2117,10 @@
 
       .category-checks {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .settings-grid {
+        grid-template-columns: 1fr;
       }
 
       .offer-media,

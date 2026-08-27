@@ -115,16 +115,72 @@
               <input id="itemBadge" name="badge" type="text" maxlength="36">
             </div>
 
-            <div class="field">
-              <label for="itemImage">صورة الوجبة</label>
-              <input id="itemImage" name="image" type="file" accept="image/jpeg,image/png,image/webp">
+            <input type="hidden" id="itemRemoveImage" name="removeImage" value="0">
+
+            <div class="field file-upload-field">
+              <span class="field-label">صورة الوجبة</span>
+              <label class="file-upload-control" for="itemImage">
+                <span class="file-upload-icon" aria-hidden="true">↑</span>
+                <span>
+                  <strong id="imageUploadTitle">اختر صورة</strong>
+                  <small id="imageFileName">JPG أو PNG أو WebP - ملف واحد فقط</small>
+                </span>
+              </label>
+              <input class="file-input" id="itemImage" name="image" type="file" accept="image/jpeg,image/png,image/webp">
             </div>
 
             <div class="preview-image" id="imagePreview">
-              <img src="" alt="معاينة الصورة">
+              <div class="preview-image-frame">
+                <img id="imagePreviewImg" src="" alt="معاينة الصورة">
+                <div class="preview-placeholder" id="imagePreviewEmpty" hidden>لا توجد صورة حالية</div>
+              </div>
+              <button class="danger-btn" id="removeImageButton" type="button" hidden>إزالة الصورة الحالية</button>
             </div>
 
             <button class="btn" id="saveItemButton" type="submit">حفظ الوجبة</button>
+          </form>
+        </section>
+
+        <section class="admin-panel reveal" aria-label="إعدادات التواصل">
+          <div class="admin-panel-header">
+            <h2>إعدادات التواصل</h2>
+          </div>
+
+          <form class="form-grid settings-grid" id="settingsForm">
+            <div class="field">
+              <label for="settingsWhatsappPhone">رقم واتساب</label>
+              <input id="settingsWhatsappPhone" name="whatsappPhone" type="text" inputmode="tel" required>
+            </div>
+            <div class="field">
+              <label for="settingsDisplayPhone">رقم الهاتف الظاهر</label>
+              <input id="settingsDisplayPhone" name="displayPhone" type="text" inputmode="tel" required>
+            </div>
+            <div class="field">
+              <label for="settingsFacebookUrl">رابط فيسبوك</label>
+              <input id="settingsFacebookUrl" name="facebookUrl" type="url" placeholder="https://">
+            </div>
+            <div class="field">
+              <label for="settingsInstagramUrl">رابط إنستغرام</label>
+              <input id="settingsInstagramUrl" name="instagramUrl" type="url" placeholder="https://">
+            </div>
+            <div class="field">
+              <label for="settingsTiktokUrl">رابط تيك توك</label>
+              <input id="settingsTiktokUrl" name="tiktokUrl" type="url" placeholder="https://">
+            </div>
+            <div class="field">
+              <label for="settingsTelegramUrl">رابط تيليجرام</label>
+              <input id="settingsTelegramUrl" name="telegramUrl" type="url" placeholder="https://">
+            </div>
+            <div class="field field-wide">
+              <label for="settingsAddress">العنوان</label>
+              <input id="settingsAddress" name="address" type="text" maxlength="120">
+            </div>
+            <div class="field field-wide">
+              <label for="settingsHours">الدوام</label>
+              <input id="settingsHours" name="hours" type="text" maxlength="120">
+            </div>
+            <p class="admin-message field-wide" id="settingsMessage"></p>
+            <button class="btn field-wide" type="submit">حفظ الإعدادات</button>
           </form>
         </section>
 
@@ -143,15 +199,17 @@
     <div class="footer-inner">
       <img src="/al-luqma-al-tayyiba/assets/brand-logo.png" alt="اللقمة الطيبة">
       <div class="socials" aria-label="حسابات التواصل">
-        <a href="#" aria-label="فيسبوك">ف</a>
-        <a href="#" aria-label="إنستغرام">◎</a>
-        <a href="#" aria-label="تيك توك">♪</a>
+        <a href="#" data-social-link="facebookUrl" aria-label="فيسبوك" hidden>ف</a>
+        <a href="#" data-social-link="instagramUrl" aria-label="إنستغرام" hidden>◎</a>
+        <a href="#" data-social-link="tiktokUrl" aria-label="تيك توك" hidden>♪</a>
+        <a href="#" data-social-link="telegramUrl" aria-label="تيليجرام" hidden>ت</a>
       </div>
       <p class="copyright">© 2026 اللقمة الطيبة. جميع الحقوق محفوظة.</p>
     </div>
   </footer>
 
   <script src="/al-luqma-al-tayyiba/js/base-path.js" defer></script>
+  <script src="/al-luqma-al-tayyiba/js/settings.js" defer></script>
   <script src="/al-luqma-al-tayyiba/js/cart-store.js" defer></script>
   <script src="/al-luqma-al-tayyiba/js/site-ui.js" defer></script>
   <script src="/al-luqma-al-tayyiba/js/admin.js" defer></script>

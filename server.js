@@ -13,7 +13,9 @@ const {
   getMenuItem,
   createMenuItem,
   updateMenuItem,
-  deleteMenuItem
+  deleteMenuItem,
+  getSettings,
+  updateSettings
 } = require("./server/database");
 const { verifyPassword } = require("./server/auth");
 
@@ -88,6 +90,12 @@ const upload = multer({
     files: 1
   },
   fileFilter: (req, file, callback) => {
+    req.uploadedImageCount = (req.uploadedImageCount || 0) + 1;
+    if (req.uploadedImageCount > 1) {
+      callback(new multer.MulterError("LIMIT_UNEXPECTED_FILE", file.fieldname));
+      return;
+    }
+
     if (!allowedMimeTypes.has(file.mimetype)) {
       callback(new Error("نوع الصورة غير مدعوم. استخدم JPG أو PNG أو WebP."));
       return;
@@ -156,6 +164,52 @@ function validateMenuPayload(body) {
   };
 }
 
+function cleanUrl(value, label) {
+  const text = cleanText(value, 240);
+  if (!text) return "";
+
+  let parsed;
+  try {
+    parsed = new URL(text);
+  } catch {
+    throw validationError(`${label} غير صالح.`);
+  }
+
+  if (!["http:", "https:"].includes(parsed.protocol)) {
+    throw validationError(`${label} يجب أن يبدأ بـ http أو https.`);
+  }
+
+  return parsed.toString();
+}
+
+function cleanPhone(value, label) {
+  const text = cleanText(value, 40);
+  if (!text) {
+    throw validationError(`${label} مطلوب.`);
+  }
+  if (!/^[+\d\s().-]+$/.test(text)) {
+    throw validationError(`${label} يحتوي على رموز غير صالحة.`);
+  }
+  return text;
+}
+
+function validateSettingsPayload(body) {
+  return {
+    whatsappPhone: cleanPhone(body.whatsappPhone, "رقم واتساب"),
+    displayPhone: cleanPhone(body.displayPhone, "رقم الهاتف الظاهر"),
+    facebookUrl: cleanUrl(body.facebookUrl, "رابط فيسبوك"),
+    instagramUrl: cleanUrl(body.instagramUrl, "رابط إنستغرام"),
+    tiktokUrl: cleanUrl(body.tiktokUrl, "رابط تيك توك"),
+    telegramUrl: cleanUrl(body.telegramUrl, "رابط تيليجرام"),
+    address: cleanText(body.address, 120),
+    hours: cleanText(body.hours, 120)
+  };
+}
+
+function shouldRemoveImage(body) {
+  return body.removeImage === "1" || body.removeImage === "true" || body.removeImage === true;
+}
+
 function requireAdmin(req, res, next) {
   if (req.session && req.session.admin) {
     next();
@@ -171,9 +225,13 @@ function handleImageUpload(req, res, next) {
       return;
     }
 
+    if (req.file) deleteLocalUpload(uploadUrl(req.file));
+
     const message = error.code === "LIMIT_FILE_SIZE"
       ? "حجم الصورة يجب ألا يتجاوز 3MB."
-      : error.message || "تعذر رفع الصورة.";
+      : error.code === "LIMIT_UNEXPECTED_FILE" || error.code === "LIMIT_FILE_COUNT"
+        ? "يسمح بصورة واحدة فقط لكل وجبة."
+        : error.message || "تعذر رفع الصورة.";
     res.status(400).json({ error: message });
   });
 }
@@ -195,7 +253,11 @@ function localUploadPath(imageUrl) {
 function deleteLocalUpload(imageUrl) {
   const fullPath = localUploadPath(imageUrl);
   if (!fullPath) return;
-  fs.rm(fullPath, { force: true }, () => {});
+  try {
+    fs.rmSync(fullPath, { force: true });
+  } catch {
+    // Ignore deletion failures so a missing local file never breaks menu updates.
+  }
 }
 
 function sendError(res, error) {
@@ -207,6 +269,10 @@ function sendError(res, error) {
 
 app.get("/api/menu", (req, res) => {
   res.json({ items: listMenuItems() });
+});
+
+app.get("/api/settings", (req, res) => {
+  res.json({ settings: getSettings() });
 });
 
 app.get("/api/menu/:id", (req, res) => {
@@ -274,6 +340,19 @@ app.get("/api/admin/menu", requireAdmin, (req, res) => {
   res.json({ items: listMenuItems() });
 });
 
+app.get("/api/admin/settings", requireAdmin, (req, res) => {
+  res.json({ settings: getSettings() });
+});
+
+app.put("/api/admin/settings", requireAdmin, (req, res) => {
+  try {
+    const settings = updateSettings(validateSettingsPayload(req.body));
+    res.json({ settings });
+  } catch (error) {
+    sendError(res, error);
+  }
+});
+
 app.post("/api/admin/menu", requireAdmin, handleImageUpload, (req, res) => {
   try {
     if (!req.file) {
@@ -309,13 +388,14 @@ app.put("/api/admin/menu/:id", requireAdmin, handleImageUpload, (req, res) => {
     }
 
     const payload = validateMenuPayload(req.body);
-    const nextImage = req.file ? uploadUrl(req.file) : current.image;
+    const removeImage = shouldRemoveImage(req.body);
+    const nextImage = req.file ? uploadUrl(req.file) : removeImage ? "" : current.image;
     const item = updateMenuItem(id, {
       ...payload,
       image: nextImage
     });
 
-    if (req.file) deleteLocalUpload(current.image);
+    if (req.file || removeImage) deleteLocalUpload(current.image);
     res.json({ item });
   } catch (error) {
     if (req.file) deleteLocalUpload(uploadUrl(req.file));

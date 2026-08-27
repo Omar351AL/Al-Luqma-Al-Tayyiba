@@ -5,6 +5,7 @@
   const menuGrid = document.getElementById("menuGrid");
   const tabs = document.querySelectorAll(".tab-btn");
   const modal = document.getElementById("itemModal");
+  const modalPanel = modal ? modal.querySelector(".item-modal-panel") : null;
   const modalImage = document.getElementById("modalImage");
   const modalBadge = document.getElementById("modalBadge");
   const modalTitle = document.getElementById("modalTitle");
@@ -160,16 +161,31 @@
     drawEmbers();
   }
 
+  function hasImage(item) {
+    return Boolean(String(item && item.image ? item.image : "").trim());
+  }
+
+  function createImagePlaceholder(className) {
+    const placeholder = document.createElement("div");
+    placeholder.className = className;
+    placeholder.textContent = "بدون صورة";
+    return placeholder;
+  }
+
   function createMenuCard(item, index) {
     const card = document.createElement("article");
     card.className = "menu-card reveal";
     card.dataset.delay = String(index * 80);
     card.dataset.category = item.category;
 
-    const image = document.createElement("img");
-    image.src = window.AppPaths.asset(item.image);
-    image.alt = item.name;
-    card.appendChild(image);
+    if (hasImage(item)) {
+      const image = document.createElement("img");
+      image.src = window.AppPaths.asset(item.image);
+      image.alt = item.name;
+      card.appendChild(image);
+    } else {
+      card.appendChild(createImagePlaceholder("menu-image-placeholder"));
+    }
 
     if (item.badge) {
       const badge = document.createElement("span");
@@ -262,8 +278,17 @@
   function openItemModal(item) {
     activeItem = item;
     quantityInput.value = "1";
-    modalImage.src = window.AppPaths.asset(item.image);
-    modalImage.alt = item.name;
+    if (hasImage(item)) {
+      modalImage.src = window.AppPaths.asset(item.image);
+      modalImage.alt = item.name;
+      modalImage.hidden = false;
+      if (modalPanel) modalPanel.classList.remove("has-no-image");
+    } else {
+      modalImage.src = "";
+      modalImage.alt = "";
+      modalImage.hidden = true;
+      if (modalPanel) modalPanel.classList.add("has-no-image");
+    }
     modalBadge.textContent = item.badge || "";
     modalTitle.textContent = item.name;
     modalDescription.textContent = item.description;

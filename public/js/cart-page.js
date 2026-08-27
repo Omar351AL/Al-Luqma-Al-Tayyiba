@@ -6,6 +6,10 @@
   const clearCartButton = document.getElementById("clearCart");
   const whatsappOrder = document.getElementById("whatsappOrder");
 
+  function hasImage(item) {
+    return Boolean(String(item && item.image ? item.image : "").trim());
+  }
+
   function createQuantityControl(item) {
     const control = document.createElement("div");
     control.className = "quantity-control";
@@ -51,10 +55,17 @@
 
     const thumb = document.createElement("div");
     thumb.className = "cart-thumb";
-    const image = document.createElement("img");
-    image.src = window.AppPaths.asset(item.image);
-    image.alt = item.name;
-    thumb.appendChild(image);
+    if (hasImage(item)) {
+      const image = document.createElement("img");
+      image.src = window.AppPaths.asset(item.image);
+      image.alt = item.name;
+      thumb.appendChild(image);
+    } else {
+      const placeholder = document.createElement("div");
+      placeholder.className = "cart-image-placeholder";
+      placeholder.textContent = "بدون صورة";
+      thumb.appendChild(placeholder);
+    }
 
     const main = document.createElement("div");
     main.className = "cart-item-main";
@@ -114,11 +125,15 @@
   });
 
   whatsappOrder.addEventListener("click", (event) => {
-    if (!window.CartStore.getItems().length) {
+    if (!window.CartStore.getItems().length || whatsappOrder.getAttribute("href") === "#") {
       event.preventDefault();
     }
   });
 
   window.addEventListener("cart:updated", renderCart);
+  window.addEventListener("settings:updated", renderCart);
+  if (window.AppSettings && window.AppSettings.ready) {
+    window.AppSettings.ready.then(renderCart);
+  }
   renderCart();
 })();

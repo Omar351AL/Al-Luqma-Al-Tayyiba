@@ -230,20 +230,20 @@
           <span class="eyebrow">تواصل معنا</span>
           <h2>طلبك القادم أقرب مما تتخيل</h2>
           <div class="contact-info">
-            <div>
+            <div data-setting-card>
               <strong>العنوان</strong>
-              <span>دمشق، شارع المطاعم</span>
+              <span data-setting-text="address"></span>
             </div>
-            <div>
+            <div data-setting-card>
               <strong>الدوام</strong>
-              <span>يومياً 12 ظهراً - 2 ليلاً</span>
+              <span data-setting-text="hours"></span>
             </div>
-            <div>
+            <div data-setting-card>
               <strong>الهاتف</strong>
-              <span>+963 999 000 000</span>
+              <span data-setting-text="displayPhone"></span>
             </div>
           </div>
-          <a class="btn whatsapp" href="https://wa.me/963999000000?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%B7%D9%84%D8%A8%D8%A7%D9%8B%20%D9%85%D9%86%20%D8%A7%D9%84%D9%84%D9%82%D9%85%D8%A9%20%D8%A7%D9%84%D8%B7%D9%8A%D8%A8%D8%A9" target="_blank" rel="noopener">اطلب عبر واتساب</a>
+          <a class="btn whatsapp" href="#" data-whatsapp-link data-whatsapp-message="مرحبًا، أريد طلبًا من اللقمة الطيبة" target="_blank" rel="noopener">اطلب عبر واتساب</a>
         </div>
       </div>
     </section>
@@ -277,14 +277,16 @@
     <div class="footer-inner">
       <img src="/al-luqma-al-tayyiba/assets/brand-logo.png" alt="اللقمة الطيبة">
       <div class="socials" aria-label="حسابات التواصل">
-        <a href="#" aria-label="فيسبوك">ف</a>
-        <a href="#" aria-label="إنستغرام">◎</a>
-        <a href="#" aria-label="تيك توك">♪</a>
+        <a href="#" data-social-link="facebookUrl" aria-label="فيسبوك" hidden>ف</a>
+        <a href="#" data-social-link="instagramUrl" aria-label="إنستغرام" hidden>◎</a>
+        <a href="#" data-social-link="tiktokUrl" aria-label="تيك توك" hidden>♪</a>
+        <a href="#" data-social-link="telegramUrl" aria-label="تيليجرام" hidden>ت</a>
       </div>
       <p class="copyright">© 2026 اللقمة الطيبة. جميع الحقوق محفوظة.</p>
     </div>
   </footer>
   <script src="/al-luqma-al-tayyiba/js/base-path.js" defer></script>
+  <script src="/al-luqma-al-tayyiba/js/settings.js" defer></script>
   <script src="/al-luqma-al-tayyiba/js/cart-store.js" defer></script>
   <script src="/al-luqma-al-tayyiba/js/site-ui.js" defer></script>
   <script src="/al-luqma-al-tayyiba/js/app.js" defer></script>

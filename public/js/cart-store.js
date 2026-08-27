@@ -1,6 +1,5 @@
 (function () {
   const CART_KEY = "al_luqma_cart";
-  const WHATSAPP_PHONE = "963999000000";
 
   function formatPrice(value) {
     const amount = Number(value) || 0;
@@ -97,7 +96,10 @@
   }
 
   function whatsappUrl(items = getItems()) {
-    return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(buildWhatsAppMessage(items))}`;
+    if (!window.AppSettings || typeof window.AppSettings.whatsappUrl !== "function") {
+      return "#";
+    }
+    return window.AppSettings.whatsappUrl(buildWhatsAppMessage(items));
   }
 
   function updateIndicators() {
@@ -130,8 +132,7 @@
     total,
     buildWhatsAppMessage,
     whatsappUrl,
-    updateIndicators,
-    WHATSAPP_PHONE
+    updateIndicators
   };
 
   document.addEventListener("DOMContentLoaded", updateIndicators);
